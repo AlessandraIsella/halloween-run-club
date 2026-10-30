@@ -169,10 +169,13 @@ footer span {
   .scare { animation: fadeonly 1.2s ease forwards; }
   @keyframes fadeonly { 0% { opacity: 0; } 15% { opacity: 1; } 75% { opacity: 1; } 100% { opacity: 0; } }
 }
-@media (max-width: 420px) {
-  .sheet { padding: 56px 18px 36px; gap: 32px; }
-  .deco-bats { width: 110px; right: 20px; top: 92px; }
-  .moon-btn { width: 52px; height: 52px; top: 22px; right: 20px; }
+@media (max-width: 520px) {
+  .sheet { padding: 128px 18px 36px; gap: 32px; }
+  .web { width: 96px; }
+  .corner-spider { left: 36px; height: 100px; }
+  .corner-spider svg { height: 100px; width: auto; }
+  .deco-bats { width: 96px; right: 90px; top: 30px; }
+  .moon-btn { width: 52px; height: 52px; top: 24px; right: 22px; }
 }
 </style>
 </head>
@@ -314,9 +317,9 @@ footer span {
         spawn(BAT, 'bat', {
           top: rand(5, 75) + 'vh',
           '--s': rand(0.6, 1.6).toFixed(2),
-          '--d': rand(1.2, 2.2).toFixed(2) + 's',
-          '--delay': rand(0, 0.6).toFixed(2) + 's'
-        }, 3200);
+          '--d': rand(3.4, 4.8).toFixed(2) + 's',
+          '--delay': rand(0, 1.2).toFixed(2) + 's'
+        }, 6500);
       }
     },
     ghosts: function () {
@@ -325,9 +328,9 @@ footer span {
           left: rand(0, 85) + 'vw',
           width: rand(50, 100) + 'px',
           '--dx': rand(-60, 60) + 'px',
-          '--d': rand(2, 3).toFixed(2) + 's',
-          '--delay': rand(0, 0.7).toFixed(2) + 's'
-        }, 4000);
+          '--d': rand(4.4, 5.8).toFixed(2) + 's',
+          '--delay': rand(0, 1.2).toFixed(2) + 's'
+        }, 7500);
       }
     },
     spider: function () {
