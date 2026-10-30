@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Halloween Run Club</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&family=Jost:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow printed-flyer column, framed like paper; tapping the icons releases the night onto the page */
+:root {
+  --paper: #F4EEE3;
+  --card: #FAF6EE;
+  --ink: #1E1A1F;
+  --soft: #3A332E;
+  --muted: #5E554C;
+  --accent: #B4541C;
+  --night: #0E0B0D;
+  --eye: #E9B23A;
+  --line: rgba(30,26,31,0.32);
+  --display: 'Pirata One', 'IM Fell English', Georgia, serif;
+  --body: 'IM Fell English', Georgia, 'Times New Roman', serif;
+  --label: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--paper); color: var(--ink); }
+body {
+  font-family: var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px;
+  overflow-x: hidden;
+}
+.sheet {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid var(--line);
+  padding: 64px 28px 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  overflow: hidden;
+}
+.web { position: absolute; top: 0; left: 0; width: 120px; height: auto; pointer-events: none; }
+.web-br { top: auto; left: auto; right: 0; bottom: 0; transform: rotate(180deg); }
+.corner-spider {
+  position: absolute; top: 0; left: 52px; width: 36px; height: 150px;
+  background: none; border: 0; padding: 0; cursor: pointer;
+}
+.moon-btn {
+  position: absolute; top: 26px; right: 26px; width: 64px; height: 64px;
+  background: none; border: 0; padding: 0; cursor: pointer;
+}
+.deco-bats { position: absolute; top: 96px; right: 40px; width: 150px; pointer-events: none; }
+
+header { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; position: relative; }
+.eyebrow {
+  font-family: var(--label); font-size: 13px; font-weight: 500;
+  letter-spacing: 0.32em; text-transform: uppercase; color: var(--accent);
+}
+h1 {
+  margin: 0; font-family: var(--display); font-weight: 400;
+  font-size: clamp(64px, 18vw, 108px); line-height: 0.92; text-wrap: balance;
+}
+h1 span { display: block; }
+.sub { margin: 0; font-style: italic; font-size: clamp(22px, 5.6vw, 29px); line-height: 1.25; color: var(--soft); }
+
+.blocks { display: flex; flex-direction: column; gap: 12px; }
+.block {
+  display: flex; align-items: center; gap: 18px;
+  padding: 16px 18px; background: var(--card); border: 1.5px solid var(--line);
+}
+.icon-btn {
+  flex-shrink: 0; width: 64px; height: 64px; display: grid; place-items: center;
+  background: var(--paper); border: 1.5px dashed var(--line); border-radius: 50%;
+  cursor: pointer; padding: 0; transition: transform .15s ease;
+}
+.icon-btn:hover { transform: rotate(-8deg) scale(1.06); }
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn:focus-visible, .cta:focus-visible, .moon-btn:focus-visible, .corner-spider:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.icon-btn svg { width: 38px; height: 38px; }
+.block-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.block-title { font-family: var(--display); font-size: 32px; line-height: 1; color: var(--accent); }
+.block-body { font-size: clamp(21px, 5.2vw, 27px); line-height: 1.2; }
+.hint {
+  text-align: center; font-family: var(--label); font-size: 12px;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); margin: 0;
+}
+
+.join { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.cta {
+  font-family: var(--display); font-size: 30px; line-height: 1; color: var(--paper);
+  background: var(--accent); border: 0; padding: 14px 34px 16px; cursor: pointer;
+  transition: transform .15s ease;
+}
+.cta:active { transform: scale(0.95); }
+.fee { margin: 0; font-style: italic; font-size: 23px; line-height: 1.3; color: var(--soft); max-width: 22em; }
+.msg { min-height: 1.4em; margin: 0; font-size: 21px; color: var(--accent); }
+
+footer { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+footer i { display: block; width: 48px; height: 1px; background: var(--accent); }
+footer span {
+  font-family: var(--label); font-size: 11px; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--muted); line-height: 1.8; max-width: 30em;
+}
+
+/* effects layer */
+.fx { position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
+.bat { position: absolute; left: 0; width: 60px; animation: fly var(--d, 1.8s) ease-in var(--delay, 0s) forwards; transform: translateX(-20vw); }
+.bat svg { display: block; width: 100%; animation: flap .14s ease-in-out infinite alternate; transform-origin: center; }
+@keyframes fly {
+  0% { transform: translate(-20vw, 0) scale(var(--s, 1)); }
+  50% { transform: translate(50vw, -10vh) scale(var(--s, 1)); }
+  100% { transform: translate(120vw, 6vh) scale(var(--s, 1)); }
+}
+@keyframes flap { from { transform: scaleY(1); } to { transform: scaleY(0.45); } }
+
+.ghost { position: absolute; bottom: -120px; width: 70px; animation: rise var(--d, 2.4s) ease-out var(--delay, 0s) forwards; opacity: 0; }
+.ghost svg { display: block; width: 100%; animation: sway .6s ease-in-out infinite alternate; }
+@keyframes rise {
+  0% { transform: translate(0, 0); opacity: 0; }
+  12% { opacity: 0.96; }
+  80% { opacity: 0.9; }
+  100% { transform: translate(var(--dx, 0px), -125vh); opacity: 0; }
+}
+@keyframes sway { from { transform: rotate(-8deg) translateX(-6px); } to { transform: rotate(8deg) translateX(6px); } }
+
+.spider-drop { position: absolute; top: -60vh; width: 44px; height: 60vh; display: flex; flex-direction: column; align-items: center; animation: drop 2.6s cubic-bezier(.3,.7,.4,1) forwards; }
+.spider-drop i { flex: 1; width: 1.5px; background: var(--ink); }
+.spider-drop svg { width: 44px; height: 40px; animation: wiggle .12s linear infinite alternate; }
+@keyframes drop {
+  0% { transform: translateY(0); }
+  28% { transform: translateY(62vh); }
+  36% { transform: translateY(56vh); }
+  60% { transform: translateY(58vh); }
+  100% { transform: translateY(0); }
+}
+@keyframes wiggle { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
+
+.scare {
+  position: absolute; inset: 0; background: var(--night);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+  animation: scare 1.5s ease-in forwards;
+}
+.scare .eyes { display: flex; gap: 46px; animation: shake .08s linear infinite; }
+.scare .eyes span {
+  width: 74px; height: 40px; background: var(--eye); border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+  box-shadow: 0 0 40px 8px rgba(233,178,58,0.55); position: relative;
+}
+.scare .eyes span::after { content: ""; position: absolute; left: 32px; top: 6px; width: 10px; height: 28px; background: var(--night); border-radius: 50%; }
+.scare .eyes span:first-child { transform: rotate(14deg); }
+.scare .eyes span:last-child { transform: rotate(-14deg); }
+.scare p { margin: 0; font-family: var(--display); font-size: clamp(56px, 16vw, 96px); color: var(--eye); animation: shake .09s linear infinite; }
+@keyframes scare {
+  0% { opacity: 0; transform: scale(1.3); }
+  6% { opacity: 1; transform: scale(1); }
+  72% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes shake {
+  0% { translate: 0 0; } 25% { translate: -4px 2px; } 50% { translate: 3px -3px; } 75% { translate: -2px -2px; } 100% { translate: 4px 3px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bat, .ghost, .spider-drop { animation-duration: 0.01s !important; }
+  .bat svg, .ghost svg, .spider-drop svg, .scare .eyes, .scare p { animation: none !important; }
+  .scare { animation: fadeonly 1.2s ease forwards; }
+  @keyframes fadeonly { 0% { opacity: 0; } 15% { opacity: 1; } 75% { opacity: 1; } 100% { opacity: 0; } }
+}
+@media (max-width: 520px) {
+  .sheet { padding: 128px 18px 36px; gap: 32px; }
+  .web { width: 96px; }
+  .corner-spider { left: 36px; height: 100px; }
+  .corner-spider svg { height: 100px; width: auto; }
+  .deco-bats { width: 96px; right: 90px; top: 30px; }
+  .moon-btn { width: 52px; height: 52px; top: 24px; right: 22px; }
+}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+  <svg class="web" viewBox="0 0 180 180" aria-hidden="true">
+    <g fill="none" stroke="#1E1A1F" stroke-opacity="0.3" stroke-width="1">
+      <path d="M0 0 L170 0"></path><path d="M0 0 L160 58"></path><path d="M0 0 L120 120"></path><path d="M0 0 L58 160"></path><path d="M0 0 L0 170"></path>
+      <path d="M50 0 Q41.9 7.4 47 17 Q35.8 22.8 35 35 Q22.8 35.8 17 47 Q7.4 41.9 0 50"></path>
+      <path d="M95 0 Q79.5 14.1 89 32 Q68.1 43.4 67 67 Q43.4 68.1 32 89 Q14.1 79.5 0 95"></path>
+      <path d="M140 0 Q117.2 20.7 132 48 Q100.3 63.9 99 99 Q63.9 100.3 48 132 Q20.7 117.2 0 140"></path>
+    </g>
+  </svg>
+  <svg class="web web-br" viewBox="0 0 180 180" aria-hidden="true">
+    <g fill="none" stroke="#1E1A1F" stroke-opacity="0.3" stroke-width="1">
+      <path d="M0 0 L170 0"></path><path d="M0 0 L160 58"></path><path d="M0 0 L120 120"></path><path d="M0 0 L58 160"></path><path d="M0 0 L0 170"></path>
+      <path d="M50 0 Q41.9 7.4 47 17 Q35.8 22.8 35 35 Q22.8 35.8 17 47 Q7.4 41.9 0 50"></path>
+      <path d="M95 0 Q79.5 14.1 89 32 Q68.1 43.4 67 67 Q43.4 68.1 32 89 Q14.1 79.5 0 95"></path>
+      <path d="M140 0 Q117.2 20.7 132 48 Q100.3 63.9 99 99 Q63.9 100.3 48 132 Q20.7 117.2 0 140"></path>
+    </g>
+  </svg>
+
+  <button class="corner-spider" type="button" data-fx="spider" aria-label="Il ragno">
+    <svg viewBox="0 0 36 150" width="36" height="150" aria-hidden="true">
+      <path d="M18 0 L18 122" stroke="#1E1A1F" stroke-opacity="0.45" stroke-width="1"></path>
+      <g fill="none" stroke="#1E1A1F" stroke-width="1.2" stroke-linecap="round">
+        <path d="M15 128 Q9 123 6 126"></path><path d="M15 131 Q8 130 5 134"></path><path d="M15 133 Q9 136 7 141"></path>
+        <path d="M21 128 Q27 123 30 126"></path><path d="M21 131 Q28 130 31 134"></path><path d="M21 133 Q27 136 29 141"></path>
+      </g>
+      <circle cx="18" cy="125" r="3" fill="#1E1A1F"></circle>
+      <circle cx="18" cy="132" r="5" fill="#1E1A1F"></circle>
+    </svg>
+  </button>
+
+  <button class="moon-btn" type="button" data-fx="bats" aria-label="La luna">
+    <svg viewBox="0 0 90 90" width="100%" height="100%" aria-hidden="true">
+      <mask id="m1"><rect width="90" height="90" fill="white"></rect><circle cx="60" cy="34" r="33" fill="black"></circle></mask>
+      <circle cx="42" cy="46" r="36" fill="#1E1A1F" fill-opacity="0.85" mask="url(#m1)"></circle>
+    </svg>
+  </button>
+
+  <svg class="deco-bats" viewBox="0 0 150 80" aria-hidden="true">
+    <g fill="#1E1A1F" fill-opacity="0.8">
+      <path transform="translate(96 10) scale(1.6)" d="M0 6 C3 2 6 2 8 5 C9 3 10 2 12 3 C14 2 15 3 16 5 C18 2 21 2 24 6 C21 5 19 6 18 9 C16 7 14 8 12 10 C10 8 8 7 6 9 C5 6 3 5 0 6 Z"></path>
+      <path transform="translate(30 50) scale(1.05) rotate(-12)" d="M0 6 C3 2 6 2 8 5 C9 3 10 2 12 3 C14 2 15 3 16 5 C18 2 21 2 24 6 C21 5 19 6 18 9 C16 7 14 8 12 10 C10 8 8 7 6 9 C5 6 3 5 0 6 Z"></path>
+    </g>
+  </svg>
+
+  <header>
+    <span class="eyebrow">Si cercano nuovi membri</span>
+    <h1><span>Halloween</span><span>Run Club</span></h1>
+    <p class="sub">corriamo di notte perché il sole ci fa male</p>
+  </header>
+
+  <div class="blocks">
+    <div class="block">
+      <button class="icon-btn" type="button" data-fx="bats" aria-label="Tocca la luna">
+        <svg viewBox="0 0 90 90" aria-hidden="true">
+          <mask id="m2"><rect width="90" height="90" fill="white"></rect><circle cx="60" cy="34" r="33" fill="black"></circle></mask>
+          <circle cx="42" cy="46" r="36" fill="#B4541C" mask="url(#m2)"></circle>
+        </svg>
+      </button>
+      <div class="block-text">
+        <span class="block-title">Quando</span>
+        <span class="block-body">ogni domenica a mezzanotte</span>
+      </div>
+    </div>
+    <div class="block">
+      <button class="icon-btn" type="button" data-fx="ghosts" aria-label="Tocca la lapide">
+        <svg viewBox="0 0 54 54" aria-hidden="true">
+          <g fill="none" stroke="#B4541C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 48 L14 22 A13 13 0 0 1 40 22 L40 48"></path><path d="M27 18 L27 36"></path><path d="M21 24 L33 24"></path>
+            <path d="M5 48 L49 48"></path><path d="M9 48 L10 44 M45 48 L44 43 M47 48 L48 45"></path>
+          </g>
+        </svg>
+      </button>
+      <div class="block-text">
+        <span class="block-title">Ritrovo</span>
+        <span class="block-body">al cimitero, terza lapide a sinistra</span>
+      </div>
+    </div>
+    <div class="block">
+      <button class="icon-btn" type="button" data-fx="scare" aria-label="Tocca l'impronta">
+        <svg viewBox="0 0 54 54" aria-hidden="true">
+          <g fill="#B4541C">
+            <ellipse cx="27" cy="37" rx="10" ry="8.5"></ellipse>
+            <ellipse cx="13" cy="25" rx="4.5" ry="5.5" transform="rotate(-20 13 25)"></ellipse>
+            <ellipse cx="21" cy="16" rx="4.5" ry="5.5" transform="rotate(-8 21 16)"></ellipse>
+            <ellipse cx="33" cy="16" rx="4.5" ry="5.5" transform="rotate(8 33 16)"></ellipse>
+            <ellipse cx="41" cy="25" rx="4.5" ry="5.5" transform="rotate(20 41 25)"></ellipse>
+          </g>
+        </svg>
+      </button>
+      <div class="block-text">
+        <span class="block-title">Ritmo</span>
+        <span class="block-body">dipende da quanto in fretta scappiamo dai lupi mannari</span>
+      </div>
+    </div>
+    <p class="hint">tocca le icone, se hai il coraggio</p>
+  </div>
+
+  <div class="join">
+    <button class="cta" type="button" id="join">Iscriviti</button>
+    <p class="fee">quota d'iscrizione un'anima, si accetta anche una fetta di pizza</p>
+    <p class="msg" id="msg" aria-live="polite"></p>
+  </div>
+
+  <footer>
+    <i aria-hidden="true"></i>
+    <span>nessun runner è stato maltrattato, qualcuno è stato morso</span>
+  </footer>
+</div>
+
+<div class="fx" id="fx" aria-hidden="true"></div>
+
+<script>
+(function () {
+  var fx = document.getElementById('fx');
+  var BAT = '<svg viewBox="0 0 24 10"><path fill="#1E1A1F" d="M0 6 C3 2 6 2 8 5 C9 3 10 2 12 3 C14 2 15 3 16 5 C18 2 21 2 24 6 C21 5 19 6 18 9 C16 7 14 8 12 10 C10 8 8 7 6 9 C5 6 3 5 0 6 Z"></path></svg>';
+  var GHOST = '<svg viewBox="0 0 64 76"><path d="M8 70 L8 30 A24 24 0 0 1 56 30 L56 70 L48 63 L40 70 L32 63 L24 70 L16 63 Z" fill="#FFFFFF" stroke="#1E1A1F" stroke-width="2" stroke-linejoin="round"></path><ellipse cx="24" cy="32" rx="4" ry="6" fill="#1E1A1F"></ellipse><ellipse cx="40" cy="32" rx="4" ry="6" fill="#1E1A1F"></ellipse><ellipse cx="32" cy="47" rx="4" ry="5.5" fill="#1E1A1F"></ellipse></svg>';
+  var SPIDER = '<svg viewBox="0 0 44 40"><g fill="none" stroke="#1E1A1F" stroke-width="2" stroke-linecap="round"><path d="M18 16 Q8 6 3 10"></path><path d="M18 20 Q7 16 2 22"></path><path d="M18 24 Q8 28 4 36"></path><path d="M26 16 Q36 6 41 10"></path><path d="M26 20 Q37 16 42 22"></path><path d="M26 24 Q36 28 40 36"></path></g><circle cx="22" cy="12" r="5" fill="#1E1A1F"></circle><circle cx="22" cy="24" r="9" fill="#1E1A1F"></circle><circle cx="20" cy="11" r="1.3" fill="#E9B23A"></circle><circle cx="24" cy="11" r="1.3" fill="#E9B23A"></circle></svg>';
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function spawn(html, cls, style, life) {
+    var el = document.createElement('div');
+    el.className = cls;
+    el.innerHTML = html;
+    for (var k in style) el.style.setProperty(k, style[k]);
+    fx.appendChild(el);
+    setTimeout(function () { el.remove(); }, life);
+    return el;
+  }
+  function buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+
+  var effects = {
+    bats: function () {
+      for (var i = 0; i < 14; i++) {
+        spawn(BAT, 'bat', {
+          top: rand(5, 75) + 'vh',
+          '--s': rand(0.6, 1.6).toFixed(2),
+          '--d': rand(3.4, 4.8).toFixed(2) + 's',
+          '--delay': rand(0, 1.2).toFixed(2) + 's'
+        }, 6500);
+      }
+    },
+    ghosts: function () {
+      for (var i = 0; i < 8; i++) {
+        spawn(GHOST, 'ghost', {
+          left: rand(0, 85) + 'vw',
+          width: rand(50, 100) + 'px',
+          '--dx': rand(-60, 60) + 'px',
+          '--d': rand(4.4, 5.8).toFixed(2) + 's',
+          '--delay': rand(0, 1.2).toFixed(2) + 's'
+        }, 7500);
+      }
+    },
+    spider: function () {
+      spawn('<i></i>' + SPIDER, 'spider-drop', { left: rand(15, 75) + 'vw' }, 2700);
+      buzz(60);
+    },
+    scare: function () {
+      spawn('<div class="eyes"><span></span><span></span></div><p>Auuuuuu!</p>', 'scare', {}, 1600);
+      buzz([80, 40, 160]);
+    }
+  };
+
+  document.querySelectorAll('[data-fx]').forEach(function (btn) {
+    btn.addEventListener('click', function () { effects[btn.getAttribute('data-fx')](); });
+  });
+
+  var msg = document.getElementById('msg');
+  document.getElementById('join').addEventListener('click', function () {
+    effects.spider();
+    setTimeout(effects.ghosts, 400);
+    msg.textContent = 'Iscrizione accettata. Passiamo a prenderti a mezzanotte.';
+  });
+})();
+</script>
+</body>
+</html>
